@@ -1,15 +1,15 @@
-import express, { Application } from 'express';
-import cors from 'cors';
-import { apiReference } from '@scalar/express-api-reference';
-import agentRoutes from './routes/agent.routes.js';
-import { swaggerSpec } from './config/swagger.js';
+import express, { Application } from 'express'
+import cors from 'cors'
+import { apiReference } from '@scalar/express-api-reference'
+import agentRoutes from './routes/agent.routes.js'
+import { swaggerSpec } from './config/swagger.js'
 
-const app: Application = express();
+const app: Application = express()
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // API Documentation with Scalar
 app.use(
@@ -20,25 +20,25 @@ app.use(
     },
     theme: 'purple',
   })
-);
+)
 
 // Serve OpenAPI spec as JSON
 app.get('/api-docs.json', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(swaggerSpec);
-});
+  res.setHeader('Content-Type', 'application/json')
+  res.send(swaggerSpec)
+})
 
 // Routes
-app.use('/api', agentRoutes);
+app.use('/api', agentRoutes)
 
 // Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
+})
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+  res.status(404).json({ error: 'Route not found' })
+})
 
-export default app;
+export default app

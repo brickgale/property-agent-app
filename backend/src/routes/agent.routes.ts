@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { agentController } from '../controllers/agent.controller.js';
+import { Router } from 'express'
+import { agentController } from '../controllers/agent.controller.js'
 
-const router = Router();
+const router = Router()
 
 /**
  * @swagger
@@ -31,7 +31,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/agents', (req, res) => agentController.createAgent(req, res));
+router.post('/agents', (req, res) => agentController.createAgent(req, res))
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ router.post('/agents', (req, res) => agentController.createAgent(req, res));
  *       500:
  *         description: Internal server error
  */
-router.get('/agents', (req, res) => agentController.getAgents(req, res));
+router.get('/agents', (req, res) => agentController.getAgents(req, res))
 
 /**
  * @swagger
@@ -83,7 +83,7 @@ router.get('/agents', (req, res) => agentController.getAgents(req, res));
  *       500:
  *         description: Internal server error
  */
-router.get('/agents/:id', (req, res) => agentController.getAgentById(req, res));
+router.get('/agents/:id', (req, res) => agentController.getAgentById(req, res))
 
 /**
  * @swagger
@@ -123,7 +123,7 @@ router.get('/agents/:id', (req, res) => agentController.getAgentById(req, res));
  *       500:
  *         description: Internal server error
  */
-router.put('/agents/:id', (req, res) => agentController.updateAgent(req, res));
+router.put('/agents/:id', (req, res) => agentController.updateAgent(req, res))
 
 /**
  * @swagger
@@ -151,6 +151,6 @@ router.put('/agents/:id', (req, res) => agentController.updateAgent(req, res));
  *       500:
  *         description: Internal server error
  */
-router.delete('/agents/:id', (req, res) => agentController.deleteAgent(req, res));
+router.delete('/agents/:id', (req, res) => agentController.deleteAgent(req, res))
 
-export default router;
+export default router

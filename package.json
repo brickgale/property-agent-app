@@ -1,0 +1,36 @@
+{
+  "name": "property-agent-app",
+  "version": "1.0.0",
+  "description": "Property Management Application - Monorepo",
+  "private": true,
+  "scripts": {
+    "install:backend": "cd backend && pnpm install",
+    "install:frontend": "cd frontend && pnpm install",
+    "install:all": "pnpm run install:backend && pnpm run install:frontend",
+    "dev:backend": "cd backend && pnpm run dev",
+    "dev:frontend": "cd frontend && pnpm run dev",
+    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "build:backend": "cd backend && pnpm run build",
+    "build:frontend": "cd frontend && pnpm run build",
+    "build": "pnpm run build:backend && pnpm run build:frontend",
+    "format:backend": "cd backend && pnpm run format",
+    "format:frontend": "cd frontend && pnpm run format",
+    "format": "prettier --write . && pnpm run format:backend && pnpm run format:frontend",
+    "lint:backend": "cd backend && pnpm run lint",
+    "lint:frontend": "cd frontend && pnpm run lint",
+    "lint": "pnpm run lint:backend && pnpm run lint:frontend",
+    "lint:fix": "pnpm run lint:backend -- --fix && pnpm run lint:frontend -- --fix"
+  },
+  "keywords": [
+    "property-management",
+    "vue",
+    "express",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prettier": "^3.4.2"
+  }
+}

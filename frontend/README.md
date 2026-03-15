@@ -6,16 +6,16 @@ Frontend application for Property Management built with Vue 3, TypeScript, and V
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Run development server
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 
 # Preview production build
-npm run preview
+pnpm run preview
 ```
 
 ## 🌐 Access
@@ -69,31 +69,34 @@ The frontend communicates with the backend API through a service layer:
 
 ```typescript
 // Example: Creating an agent
-import { agentService } from '@/api/agent.service';
+import { agentService } from '@/api/agent.service'
 
 const agent = await agentService.createAgent({
   firstName: 'John',
   lastName: 'Doe',
   email: 'john@example.com',
-  mobileNumber: '09123456789'
-});
+  mobileNumber: '09123456789',
+})
 ```
 
 ## 📱 Pages
 
 ### Agent List (`/`)
+
 - Displays all agents in a table
 - Shows: Name, Email, Mobile, Created Date
 - Actions: Edit and Delete buttons
 - "Add New Agent" button
 
 ### Create Agent (`/agents/new`)
+
 - Form with fields for agent information
 - Real-time validation
 - Success message on creation
 - Cancel button returns to list
 
 ### Edit Agent (`/agents/:id/edit`)
+
 - Pre-populated form with agent data
 - Update functionality
 - Validation on save
@@ -117,6 +120,7 @@ The application uses Pinia for state management with the following store:
 ## ✅ Validation
 
 Client-side validation includes:
+
 - Required field checks
 - Email format validation
 - Mobile number format (10-15 digits)
@@ -151,12 +155,14 @@ import Component from '@/components/Component.vue'
 ## 📦 Dependencies
 
 ### Production
+
 - vue - Progressive JavaScript framework
 - vue-router - Official router
 - pinia - State management
 - axios - HTTP client
 
 ### Development
+
 - @vitejs/plugin-vue - Vite plugin for Vue
 - typescript - TypeScript compiler
 - vite - Build tool
@@ -165,6 +171,7 @@ import Component from '@/components/Component.vue'
 ## 🎨 Styling
 
 The application uses custom CSS with:
+
 - Responsive layout
 - Modern button styles
 - Form components
@@ -176,10 +183,10 @@ The application uses custom CSS with:
 
 ```bash
 # Build the application
-npm run build
+pnpm run build
 
 # Preview the production build
-npm run preview
+pnpm run preview
 ```
 
 The built files will be in the `dist/` directory.
@@ -202,12 +209,12 @@ The built files will be in the `dist/` directory.
 
 ```typescript
 interface PropertyAgent {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobileNumber: string;
-  createdAt: string;
-  updatedAt: string;
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  mobileNumber: string
+  createdAt: string
+  updatedAt: string
 }
 ```

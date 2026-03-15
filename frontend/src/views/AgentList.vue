@@ -10,9 +10,7 @@
         </div>
       </div>
 
-      <div v-if="loading && agents.length === 0" class="loading">
-        Loading agents...
-      </div>
+      <div v-if="loading && agents.length === 0" class="loading">Loading agents...</div>
 
       <div v-else-if="error" class="error-message">
         {{ error }}
@@ -45,8 +43,8 @@
                   <router-link :to="`/agents/${agent.id}/edit`">
                     <button class="btn btn-secondary btn-small">Edit</button>
                   </router-link>
-                  <button 
-                    class="btn btn-danger btn-small" 
+                  <button
+                    class="btn btn-danger btn-small"
                     @click="handleDelete(agent.id)"
                     :disabled="loading"
                   >
@@ -63,42 +61,42 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-import { useAgentStore } from '../stores/agent.store';
+import { onMounted, computed } from 'vue'
+import { useAgentStore } from '../stores/agent.store'
 
-const agentStore = useAgentStore();
-const agents = computed(() => agentStore.agents);
-const loading = computed(() => agentStore.loading);
-const error = computed(() => agentStore.error);
+const agentStore = useAgentStore()
+const agents = computed(() => agentStore.agents)
+const loading = computed(() => agentStore.loading)
+const error = computed(() => agentStore.error)
 
 onMounted(async () => {
   try {
-    await agentStore.fetchAgents();
+    await agentStore.fetchAgents()
   } catch (err) {
-    console.error('Failed to fetch agents:', err);
+    console.error('Failed to fetch agents:', err)
   }
-});
+})
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  });
+  })
 }
 
 async function handleDelete(id: string) {
   if (!confirm('Are you sure you want to delete this agent?')) {
-    return;
+    return
   }
 
   try {
-    await agentStore.deleteAgent(id);
+    await agentStore.deleteAgent(id)
   } catch (err) {
-    console.error('Failed to delete agent:', err);
+    console.error('Failed to delete agent:', err)
   }
 }
 </script>

@@ -6,16 +6,16 @@ Backend API for Property Management Application built with Node.js, TypeScript, 
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Run in development mode
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 
 # Run production build
-npm start
+pnpm start
 ```
 
 ## 📋 Environment Variables
@@ -82,13 +82,13 @@ src/
 
 ```typescript
 interface PropertyAgent {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobileNumber: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  mobileNumber: string
+  createdAt: Date
+  updatedAt: Date
 }
 ```
 
@@ -101,6 +101,7 @@ interface PropertyAgent {
 ## 🧪 Example Requests
 
 ### Create Agent
+
 ```bash
 curl -X POST http://localhost:3000/api/agents \
   -H "Content-Type: application/json" \
@@ -113,11 +114,13 @@ curl -X POST http://localhost:3000/api/agents \
 ```
 
 ### Get All Agents
+
 ```bash
 curl http://localhost:3000/api/agents
 ```
 
 ### Update Agent
+
 ```bash
 curl -X PUT http://localhost:3000/api/agents/{id} \
   -H "Content-Type: application/json" \
@@ -125,6 +128,7 @@ curl -X PUT http://localhost:3000/api/agents/{id} \
 ```
 
 ### Delete Agent
+
 ```bash
 curl -X DELETE http://localhost:3000/api/agents/{id}
 ```
@@ -132,6 +136,7 @@ curl -X DELETE http://localhost:3000/api/agents/{id}
 ## 📚 API Documentation
 
 Once running, visit:
+
 - **Interactive Docs**: http://localhost:3000/api-docs
 - **OpenAPI Spec**: http://localhost:3000/api-docs.json
 
@@ -142,6 +147,7 @@ CORS is enabled for all origins in development. Update `src/app.ts` for producti
 ## 📦 Dependencies
 
 ### Production
+
 - express - Web framework
 - cors - CORS middleware
 - uuid - UUID generation
@@ -149,6 +155,7 @@ CORS is enabled for all origins in development. Update `src/app.ts` for producti
 - @scalar/express-api-reference - API documentation UI
 
 ### Development
+
 - typescript - TypeScript compiler
 - ts-node-dev - Development server
 - @types/node - Node.js type definitions

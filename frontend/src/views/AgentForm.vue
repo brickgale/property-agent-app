@@ -76,123 +76,123 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useAgentStore } from '../stores/agent.store';
-import type { CreatePropertyAgentDTO } from '../types/agent';
-import { agentService } from '../api/agent.service';
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAgentStore } from '../stores/agent.store'
+import type { CreatePropertyAgentDTO } from '../types/agent'
+import { agentService } from '../api/agent.service'
 
-const router = useRouter();
-const route = useRoute();
-const agentStore = useAgentStore();
+const router = useRouter()
+const route = useRoute()
+const agentStore = useAgentStore()
 
-const isEditMode = computed(() => !!route.params.id);
-const loading = computed(() => agentStore.loading);
-const error = computed(() => agentStore.error);
+const isEditMode = computed(() => !!route.params.id)
+const loading = computed(() => agentStore.loading)
+const error = computed(() => agentStore.error)
 
 const formData = reactive<CreatePropertyAgentDTO>({
   firstName: '',
   lastName: '',
   email: '',
   mobileNumber: '',
-});
+})
 
 const errors = reactive({
   firstName: '',
   lastName: '',
   email: '',
   mobileNumber: '',
-});
+})
 
-const successMessage = ref('');
+const successMessage = ref('')
 
 onMounted(async () => {
   if (isEditMode.value) {
     try {
-      const agent = await agentService.getAgentById(route.params.id as string);
-      formData.firstName = agent.firstName;
-      formData.lastName = agent.lastName;
-      formData.email = agent.email;
-      formData.mobileNumber = agent.mobileNumber;
+      const agent = await agentService.getAgentById(route.params.id as string)
+      formData.firstName = agent.firstName
+      formData.lastName = agent.lastName
+      formData.email = agent.email
+      formData.mobileNumber = agent.mobileNumber
     } catch (err) {
-      console.error('Failed to fetch agent:', err);
+      console.error('Failed to fetch agent:', err)
     }
   }
-});
+})
 
 function validateForm(): boolean {
-  let isValid = true;
+  let isValid = true
 
   // Reset errors
-  errors.firstName = '';
-  errors.lastName = '';
-  errors.email = '';
-  errors.mobileNumber = '';
+  errors.firstName = ''
+  errors.lastName = ''
+  errors.email = ''
+  errors.mobileNumber = ''
 
   // Validate first name
   if (!formData.firstName.trim()) {
-    errors.firstName = 'First name is required';
-    isValid = false;
+    errors.firstName = 'First name is required'
+    isValid = false
   }
 
   // Validate last name
   if (!formData.lastName.trim()) {
-    errors.lastName = 'Last name is required';
-    isValid = false;
+    errors.lastName = 'Last name is required'
+    isValid = false
   }
 
   // Validate email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!formData.email.trim()) {
-    errors.email = 'Email is required';
-    isValid = false;
+    errors.email = 'Email is required'
+    isValid = false
   } else if (!emailRegex.test(formData.email)) {
-    errors.email = 'Please enter a valid email address';
-    isValid = false;
+    errors.email = 'Please enter a valid email address'
+    isValid = false
   }
 
   // Validate mobile number
-  const mobileRegex = /^\d{10,15}$/;
-  const cleanedMobile = formData.mobileNumber.replace(/[\s-]/g, '');
+  const mobileRegex = /^\d{10,15}$/
+  const cleanedMobile = formData.mobileNumber.replace(/[\s-]/g, '')
   if (!formData.mobileNumber.trim()) {
-    errors.mobileNumber = 'Mobile number is required';
-    isValid = false;
+    errors.mobileNumber = 'Mobile number is required'
+    isValid = false
   } else if (!mobileRegex.test(cleanedMobile)) {
-    errors.mobileNumber = 'Please enter a valid mobile number (10-15 digits)';
-    isValid = false;
+    errors.mobileNumber = 'Please enter a valid mobile number (10-15 digits)'
+    isValid = false
   }
 
-  return isValid;
+  return isValid
 }
 
 async function handleSubmit() {
   if (!validateForm()) {
-    return;
+    return
   }
 
-  successMessage.value = '';
+  successMessage.value = ''
 
   try {
     if (isEditMode.value) {
-      await agentStore.updateAgent(route.params.id as string, formData);
-      successMessage.value = 'Agent updated successfully!';
+      await agentStore.updateAgent(route.params.id as string, formData)
+      successMessage.value = 'Agent updated successfully!'
     } else {
-      await agentStore.createAgent(formData);
-      successMessage.value = 'Agent created successfully!';
-      
+      await agentStore.createAgent(formData)
+      successMessage.value = 'Agent created successfully!'
+
       // Reset form
-      formData.firstName = '';
-      formData.lastName = '';
-      formData.email = '';
-      formData.mobileNumber = '';
+      formData.firstName = ''
+      formData.lastName = ''
+      formData.email = ''
+      formData.mobileNumber = ''
     }
 
     // Redirect to list after 1.5 seconds
     setTimeout(() => {
-      router.push('/');
-    }, 1500);
+      router.push('/')
+    }, 1500)
   } catch (err) {
-    console.error('Failed to save agent:', err);
+    console.error('Failed to save agent:', err)
   }
 }
 </script>
