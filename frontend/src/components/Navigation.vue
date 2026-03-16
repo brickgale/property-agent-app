@@ -10,21 +10,21 @@ const navigateHome = () => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <header
+    class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+  >
     <div class="container mx-auto flex h-16 max-w-screen-2xl items-center px-4">
       <div class="mr-4 flex">
-        <button 
-          @click="navigateHome" 
+        <button
+          @click="navigateHome"
           class="mr-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-md p-1 hover:bg-accent transition-colors"
           aria-label="Go to homepage"
         >
           <Home class="h-6 w-6 text-primary" />
-          <span class="hidden font-bold sm:inline-block text-lg">
-            Property Agent
-          </span>
+          <span class="hidden font-bold sm:inline-block text-lg"> Property Agent </span>
         </button>
       </div>
-      
+
       <nav class="flex items-center gap-4 text-sm lg:gap-6 ml-auto">
         <router-link
           to="/"

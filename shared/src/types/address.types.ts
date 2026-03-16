@@ -10,6 +10,14 @@ import {
  * TypeScript types inferred from Zod schemas
  */
 
+// Re-export schemas
+export {
+  AddressSchema,
+  CreateAddressSchema,
+  UpdateAddressSchema,
+  AddressableTypeEnum,
+} from '../schemas/address.schema.js'
+
 // Enums
 export type AddressableType = z.infer<typeof AddressableTypeEnum>
 

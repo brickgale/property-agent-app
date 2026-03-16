@@ -13,4 +13,4 @@ export {
   PropertyAgentSchema,
   CreatePropertyAgentSchema,
   UpdatePropertyAgentSchema,
-} from '@shared/schemas'
+} from '@shared/types'

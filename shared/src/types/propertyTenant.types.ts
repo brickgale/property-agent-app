@@ -9,6 +9,13 @@ import {
  * TypeScript types inferred from Zod schemas
  */
 
+// Re-export schemas
+export {
+  PropertyTenantSchema,
+  CreatePropertyTenantSchema,
+  UpdatePropertyTenantSchema,
+} from '../schemas/propertyTenant.schema.js'
+
 // Backend types (with Date objects)
 export type PropertyTenant = z.infer<typeof PropertyTenantSchema>
 export type CreatePropertyTenantDTO = z.infer<typeof CreatePropertyTenantSchema>

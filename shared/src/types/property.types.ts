@@ -11,6 +11,15 @@ import {
  * TypeScript types inferred from Zod schemas
  */
 
+// Re-export schemas
+export {
+  PropertySchema,
+  CreatePropertySchema,
+  UpdatePropertySchema,
+  PropertyTypeEnum,
+  PropertyStatusEnum,
+} from '../schemas/property.schema.js'
+
 // Enums
 export type PropertyType = z.infer<typeof PropertyTypeEnum>
 export type PropertyStatus = z.infer<typeof PropertyStatusEnum>

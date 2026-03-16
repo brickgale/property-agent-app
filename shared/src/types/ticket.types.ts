@@ -12,6 +12,16 @@ import {
  * TypeScript types inferred from Zod schemas
  */
 
+// Re-export schemas
+export {
+  TicketSchema,
+  CreateTicketSchema,
+  UpdateTicketSchema,
+  TicketTypeEnum,
+  TicketPriorityEnum,
+  TicketStatusEnum,
+} from '../schemas/ticket.schema.js'
+
 // Enums
 export type TicketType = z.infer<typeof TicketTypeEnum>
 export type TicketPriority = z.infer<typeof TicketPriorityEnum>

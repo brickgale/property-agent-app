@@ -23,10 +23,15 @@
           {{ error }}
         </div>
 
-        <div v-else-if="agents.length === 0" class="flex flex-col items-center justify-center py-12">
+        <div
+          v-else-if="agents.length === 0"
+          class="flex flex-col items-center justify-center py-12"
+        >
           <Users class="h-12 w-12 text-muted-foreground mb-4" />
           <h3 class="text-lg font-semibold mb-2">No agents found</h3>
-          <p class="text-sm text-muted-foreground mb-4">Start by adding your first property agent.</p>
+          <p class="text-sm text-muted-foreground mb-4">
+            Start by adding your first property agent.
+          </p>
           <router-link to="/agents/new">
             <Button>Add Agent</Button>
           </router-link>

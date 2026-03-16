@@ -10,6 +10,14 @@ import {
  * TypeScript types inferred from Zod schemas
  */
 
+// Re-export schemas
+export {
+  TenantSchema,
+  CreateTenantSchema,
+  UpdateTenantSchema,
+  TenantStatusEnum,
+} from '../schemas/tenant.schema.js'
+
 // Enums
 export type TenantStatus = z.infer<typeof TenantStatusEnum>
 
