@@ -7,6 +7,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@shared/schemas': path.resolve(__dirname, '../shared/src/schemas/agent.schema.ts'),
+      '@shared/types': path.resolve(__dirname, '../shared/src/types/index.ts'),
+      '@shared': path.resolve(__dirname, '../shared/src/index.ts'),
     },
   },
   server: {

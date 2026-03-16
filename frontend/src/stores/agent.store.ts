@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { PropertyAgent, CreatePropertyAgentDTO, UpdatePropertyAgentDTO } from '../types/agent'
-import { agentService } from '../api/agent.service'
+import type {
+  PropertyAgentResponse,
+  CreatePropertyAgentDTO,
+  UpdatePropertyAgentDTO,
+} from '@/types/agent'
+import { agentService } from '@/api/agent.service'
 
 export const useAgentStore = defineStore('agent', () => {
-  const agents = ref<PropertyAgent[]>([])
+  const agents = ref<PropertyAgentResponse[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
 

@@ -1,17 +1,14 @@
-// Base interface for PropertyAgent data structure
-export interface IPropertyAgent {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  mobileNumber: string
-  createdAt: Date
-  updatedAt: Date
-}
-
-// DTOs derived using utility types
-export type CreatePropertyAgentDTO = Omit<IPropertyAgent, 'id' | 'createdAt' | 'updatedAt'>
-export type UpdatePropertyAgentDTO = Partial<Omit<IPropertyAgent, 'id' | 'createdAt' | 'updatedAt'>>
+import { v4 as uuidv4 } from 'uuid'
+import {
+  PropertyAgent as IPropertyAgent,
+  CreatePropertyAgentDTO,
+  UpdatePropertyAgentDTO,
+} from '@shared/types'
+import {
+  PropertyAgentSchema,
+  CreatePropertyAgentSchema,
+  UpdatePropertyAgentSchema,
+} from '@shared/schemas'
 
 // Class-based model with methods, getters, and mutations
 export class PropertyAgent implements IPropertyAgent {
@@ -25,52 +22,51 @@ export class PropertyAgent implements IPropertyAgent {
     public updatedAt: Date
   ) {}
 
+  // Factory method with validation
+  static create(data: CreatePropertyAgentDTO): PropertyAgent {
+    // Validate using Zod
+    const validated = CreatePropertyAgentSchema.parse(data)
+
+    const now = new Date()
+    return new PropertyAgent(
+      uuidv4(),
+      validated.firstName,
+      validated.lastName,
+      validated.email,
+      validated.mobileNumber,
+      now,
+      now
+    )
+  }
+
   // Getters
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`
   }
 
-  // Static validation methods
-  static validateEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
-  static validateMobileNumber(mobile: string): boolean {
-    const mobileRegex = /^\d{10,15}$/
-    return mobileRegex.test(mobile.replace(/[\s-]/g, ''))
-  }
-
-  // Instance validation
-  validate(): { isValid: boolean; errors: string[] } {
-    const errors: string[] = []
-
-    if (!this.firstName?.trim()) {
-      errors.push('First name is required')
-    }
-    if (!this.lastName?.trim()) {
-      errors.push('Last name is required')
-    }
-    if (!PropertyAgent.validateEmail(this.email)) {
-      errors.push('Invalid email format')
-    }
-    if (!PropertyAgent.validateMobileNumber(this.mobileNumber)) {
-      errors.push('Invalid mobile number format (10-15 digits required)')
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    }
-  }
-
-  // Mutation method with validation
+  // Update method with validation
   update(data: UpdatePropertyAgentDTO): void {
-    if (data.firstName !== undefined) this.firstName = data.firstName
-    if (data.lastName !== undefined) this.lastName = data.lastName
-    if (data.email !== undefined) this.email = data.email
-    if (data.mobileNumber !== undefined) this.mobileNumber = data.mobileNumber
+    // Validate using Zod
+    const validated = UpdatePropertyAgentSchema.parse(data)
+
+    if (validated.firstName !== undefined) this.firstName = validated.firstName
+    if (validated.lastName !== undefined) this.lastName = validated.lastName
+    if (validated.email !== undefined) this.email = validated.email
+    if (validated.mobileNumber !== undefined) this.mobileNumber = validated.mobileNumber
     this.updatedAt = new Date()
+  }
+
+  // Validate current instance
+  validate(): void {
+    PropertyAgentSchema.parse({
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      mobileNumber: this.mobileNumber,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    })
   }
 
   // Serialization for JSON responses
@@ -86,3 +82,6 @@ export class PropertyAgent implements IPropertyAgent {
     }
   }
 }
+
+// Re-export types for convenience
+export type { IPropertyAgent, CreatePropertyAgentDTO, UpdatePropertyAgentDTO }

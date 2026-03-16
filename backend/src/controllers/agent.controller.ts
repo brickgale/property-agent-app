@@ -1,45 +1,28 @@
 import { Request, Response } from 'express'
-import { agentRepository } from '../repositories/agent.repository.js'
-import {
-  CreatePropertyAgentDTO,
-  UpdatePropertyAgentDTO,
-  PropertyAgent,
-} from '../models/agent.model.js'
+import { agentRepository } from '@/repositories/agent.repository.js'
+import { CreatePropertyAgentDTO, UpdatePropertyAgentDTO } from '@/models/agent.model.js'
+import type { ApiErrorResponse, ApiValidationErrorResponse } from '@shared/types'
+import { ZodError } from 'zod'
 
 export class AgentController {
   // POST /agents
   createAgent(req: Request, res: Response): void {
     try {
-      const { firstName, lastName, email, mobileNumber }: CreatePropertyAgentDTO = req.body
+      const data: CreatePropertyAgentDTO = req.body
 
-      // Basic required fields check
-      if (!firstName || !lastName || !email || !mobileNumber) {
-        res.status(400).json({ error: 'All fields are required' })
-        return
-      }
-
-      // Pre-validation using static methods
-      if (!PropertyAgent.validateEmail(email)) {
-        res.status(400).json({ error: 'Invalid email format' })
-        return
-      }
-
-      if (!PropertyAgent.validateMobileNumber(mobileNumber)) {
-        res.status(400).json({ error: 'Invalid mobile number format' })
-        return
-      }
-
-      const agent = agentRepository.createAgent({
-        firstName,
-        lastName,
-        email,
-        mobileNumber,
-      })
+      // Validation happens in agentRepository.createAgent() via PropertyAgent.create()
+      const agent = agentRepository.createAgent(data)
 
       res.status(201).json(agent.toJSON())
     } catch (error: any) {
-      if (error.message?.includes('Validation failed')) {
-        res.status(400).json({ error: error.message })
+      if (error instanceof ZodError) {
+        res.status(400).json({
+          error: 'Validation failed',
+          details: error.errors.map(err => ({
+            field: err.path.join('.'),
+            message: err.message,
+          })),
+        })
       } else {
         res.status(500).json({ error: 'Internal server error' })
       }
@@ -79,18 +62,6 @@ export class AgentController {
       const { id } = req.params
       const updateData: UpdatePropertyAgentDTO = req.body
 
-      // Validate email if provided
-      if (updateData.email && !PropertyAgent.validateEmail(updateData.email)) {
-        res.status(400).json({ error: 'Invalid email format' })
-        return
-      }
-
-      // Validate mobile if provided
-      if (updateData.mobileNumber && !PropertyAgent.validateMobileNumber(updateData.mobileNumber)) {
-        res.status(400).json({ error: 'Invalid mobile number format' })
-        return
-      }
-
       const updatedAgent = agentRepository.updateAgent(id, updateData)
 
       if (!updatedAgent) {
@@ -100,8 +71,14 @@ export class AgentController {
 
       res.status(200).json(updatedAgent.toJSON())
     } catch (error: any) {
-      if (error.message?.includes('Validation failed')) {
-        res.status(400).json({ error: error.message })
+      if (error instanceof ZodError) {
+        res.status(400).json({
+          error: 'Validation failed',
+          details: error.errors.map(err => ({
+            field: err.path.join('.'),
+            message: err.message,
+          })),
+        })
       } else {
         res.status(500).json({ error: 'Internal server error' })
       }

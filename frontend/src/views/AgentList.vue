@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
-import { useAgentStore } from '../stores/agent.store'
+import { useAgentStore } from '@/stores/agent.store'
 
 const agentStore = useAgentStore()
 const agents = computed(() => agentStore.agents)

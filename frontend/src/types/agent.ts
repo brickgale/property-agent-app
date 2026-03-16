@@ -1,23 +1,16 @@
-export interface PropertyAgent {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  mobileNumber: string
-  createdAt: string
-  updatedAt: string
-}
+// Re-export shared types and schemas
+export type {
+  PropertyAgent,
+  PropertyAgentResponse,
+  CreatePropertyAgentDTO,
+  UpdatePropertyAgentDTO,
+  ApiErrorResponse,
+  ApiValidationErrorResponse,
+  ValidationError,
+} from '@shared/types'
 
-export interface CreatePropertyAgentDTO {
-  firstName: string
-  lastName: string
-  email: string
-  mobileNumber: string
-}
-
-export interface UpdatePropertyAgentDTO {
-  firstName?: string
-  lastName?: string
-  email?: string
-  mobileNumber?: string
-}
+export {
+  PropertyAgentSchema,
+  CreatePropertyAgentSchema,
+  UpdatePropertyAgentSchema,
+} from '@shared/schemas'

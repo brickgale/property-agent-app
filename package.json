@@ -4,9 +4,11 @@
   "description": "Property Management Application - Monorepo",
   "private": true,
   "scripts": {
+    "remove:modules": "rm -rf node_modules && rm -rf frontend/node_modules && rm -rf backend/node_modules && rm -rf shared/node_modules",
+    "install:shared": "cd shared && pnpm install",
     "install:backend": "cd backend && pnpm install",
     "install:frontend": "cd frontend && pnpm install",
-    "install:all": "pnpm install && pnpm run install:backend && pnpm run install:frontend",
+    "install:all": "pnpm install && pnpm run install:shared && pnpm run install:backend && pnpm run install:frontend",
     "dev:backend": "cd backend && pnpm run dev",
     "dev:frontend": "cd frontend && pnpm run dev",
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
@@ -29,7 +31,7 @@
     "express",
     "typescript"
   ],
-  "author": "",
+  "author": "Brian Monsales",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2",

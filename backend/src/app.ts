@@ -1,8 +1,8 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import { apiReference } from '@scalar/express-api-reference'
-import agentRoutes from './routes/agent.routes.js'
-import { openApiSpec } from './config/swagger.js'
+import agentRoutes from '@/routes/agent.routes.js'
+import { openApiSpec } from '@/config/swagger.js'
 
 const app: Application = express()
 

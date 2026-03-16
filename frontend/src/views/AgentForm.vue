@@ -78,9 +78,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAgentStore } from '../stores/agent.store'
-import type { CreatePropertyAgentDTO } from '../types/agent'
-import { agentService } from '../api/agent.service'
+import { useAgentStore } from '@/stores/agent.store'
+import type { CreatePropertyAgentDTO } from '@/types/agent'
+import { CreatePropertyAgentSchema } from '@/types/agent'
+import { agentService } from '@/api/agent.service'
+import { ZodError } from 'zod'
 
 const router = useRouter()
 const route = useRoute()
@@ -121,48 +123,27 @@ onMounted(async () => {
 })
 
 function validateForm(): boolean {
-  let isValid = true
-
   // Reset errors
   errors.firstName = ''
   errors.lastName = ''
   errors.email = ''
   errors.mobileNumber = ''
 
-  // Validate first name
-  if (!formData.firstName.trim()) {
-    errors.firstName = 'First name is required'
-    isValid = false
+  try {
+    // Validate using Zod schema
+    CreatePropertyAgentSchema.parse(formData)
+    return true
+  } catch (error) {
+    if (error instanceof ZodError) {
+      error.errors.forEach(err => {
+        const field = err.path[0] as keyof typeof errors
+        if (field in errors) {
+          errors[field] = err.message
+        }
+      })
+    }
+    return false
   }
-
-  // Validate last name
-  if (!formData.lastName.trim()) {
-    errors.lastName = 'Last name is required'
-    isValid = false
-  }
-
-  // Validate email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!formData.email.trim()) {
-    errors.email = 'Email is required'
-    isValid = false
-  } else if (!emailRegex.test(formData.email)) {
-    errors.email = 'Please enter a valid email address'
-    isValid = false
-  }
-
-  // Validate mobile number
-  const mobileRegex = /^\d{10,15}$/
-  const cleanedMobile = formData.mobileNumber.replace(/[\s-]/g, '')
-  if (!formData.mobileNumber.trim()) {
-    errors.mobileNumber = 'Mobile number is required'
-    isValid = false
-  } else if (!mobileRegex.test(cleanedMobile)) {
-    errors.mobileNumber = 'Please enter a valid mobile number (10-15 digits)'
-    isValid = false
-  }
-
-  return isValid
 }
 
 async function handleSubmit() {

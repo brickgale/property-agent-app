@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AgentList from '../views/AgentList.vue'
-import AgentForm from '../views/AgentForm.vue'
+import AgentList from '@/views/AgentList.vue'
+import AgentForm from '@/views/AgentForm.vue'
 
 const router = createRouter({
   history: createWebHistory(),

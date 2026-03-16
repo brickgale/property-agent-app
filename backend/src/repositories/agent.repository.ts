@@ -1,30 +1,14 @@
-import { v4 as uuidv4 } from 'uuid'
-import agents from '../data/agents.data.js'
+import agents from '@/data/agents.data.js'
 import {
   PropertyAgent,
   CreatePropertyAgentDTO,
   UpdatePropertyAgentDTO,
-} from '../models/agent.model.js'
+} from '@/models/agent.model.js'
 
 export class AgentRepository {
   createAgent(data: CreatePropertyAgentDTO): PropertyAgent {
-    const now = new Date()
-    const newAgent = new PropertyAgent(
-      uuidv4(),
-      data.firstName,
-      data.lastName,
-      data.email,
-      data.mobileNumber,
-      now,
-      now
-    )
-
-    // Validate before saving
-    const validation = newAgent.validate()
-    if (!validation.isValid) {
-      throw new Error(`Validation failed: ${validation.errors.join(', ')}`)
-    }
-
+    // Validation happens in PropertyAgent.create()
+    const newAgent = PropertyAgent.create(data)
     agents.push(newAgent)
     return newAgent
   }
@@ -44,13 +28,8 @@ export class AgentRepository {
     }
 
     const agent = agents[agentIndex]
+    // Validation happens in agent.update()
     agent.update(data)
-
-    // Validate after update
-    const validation = agent.validate()
-    if (!validation.isValid) {
-      throw new Error(`Validation failed: ${validation.errors.join(', ')}`)
-    }
 
     return agent
   }

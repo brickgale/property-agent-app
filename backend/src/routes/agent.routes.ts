@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { agentController } from '../controllers/agent.controller.js'
+import type { Router as RouterType } from 'express'
+import { AgentController } from '@/controllers/agent.controller.js'
 
-const router = Router()
+const router: RouterType = Router()
+const agentController = new AgentController()
 
 router.post('/agents', (req, res) => agentController.createAgent(req, res))
 router.get('/agents', (req, res) => agentController.getAgents(req, res))
