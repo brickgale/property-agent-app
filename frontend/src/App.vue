@@ -1,13 +1,12 @@
 <template>
-  <div id="app">
-    <nav class="nav">
-      <div class="nav-content">
-        <h1>Property Agent Management</h1>
-        <router-link to="/">View All Agents</router-link>
-      </div>
-    </nav>
-    <router-view />
+  <div class="min-h-screen">
+    <Navigation />
+    <main class="container mx-auto py-6 px-4">
+      <router-view />
+    </main>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Navigation from '@/components/Navigation.vue'
+</script>

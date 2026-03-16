@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AgentList from '@/views/AgentList.vue'
 import AgentForm from '@/views/AgentForm.vue'
+import PropertyList from '@/views/PropertyList.vue'
+import TenantList from '@/views/TenantList.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,6 +22,16 @@ const router = createRouter({
       name: 'EditAgent',
       component: AgentForm,
       props: true,
+    },
+    {
+      path: '/properties',
+      name: 'PropertyList',
+      component: PropertyList,
+    },
+    {
+      path: '/tenants',
+      name: 'TenantList',
+      component: TenantList,
     },
   ],
 })

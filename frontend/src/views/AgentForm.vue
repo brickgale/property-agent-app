@@ -1,88 +1,111 @@
 <template>
-  <div class="container">
-    <div class="card">
-      <div class="card-header">
-        <h1>{{ isEditMode ? 'Edit Agent' : 'Add New Agent' }}</h1>
-      </div>
+  <div class="max-w-2xl mx-auto">
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ isEditMode ? 'Edit Agent' : 'Add New Agent' }}</CardTitle>
+      </CardHeader>
 
-      <div v-if="error" class="error-message">
-        {{ error }}
-      </div>
-
-      <div v-if="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-
-      <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="firstName">First Name *</label>
-          <input
-            id="firstName"
-            v-model="formData.firstName"
-            type="text"
-            required
-            placeholder="Enter first name"
-          />
-          <div v-if="errors.firstName" class="error">{{ errors.firstName }}</div>
+      <CardContent>
+        <div v-if="error" class="rounded-lg bg-destructive/15 p-4 text-destructive mb-6">
+          {{ error }}
         </div>
 
-        <div class="form-group">
-          <label for="lastName">Last Name *</label>
-          <input
-            id="lastName"
-            v-model="formData.lastName"
-            type="text"
-            required
-            placeholder="Enter last name"
-          />
-          <div v-if="errors.lastName" class="error">{{ errors.lastName }}</div>
+        <div v-if="successMessage" class="rounded-lg bg-primary/15 p-4 text-primary mb-6">
+          {{ successMessage }}
         </div>
 
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input
-            id="email"
-            v-model="formData.email"
-            type="email"
-            required
-            placeholder="Enter email address"
-          />
-          <div v-if="errors.email" class="error">{{ errors.email }}</div>
-        </div>
+        <form @submit.prevent="handleSubmit" class="space-y-6">
+          <div class="space-y-2">
+            <Label for="firstName">First Name *</Label>
+            <Input
+              id="firstName"
+              v-model="formData.firstName"
+              type="text"
+              required
+              placeholder="Enter first name"
+            />
+            <div v-if="errors.firstName" class="text-sm text-destructive">
+              {{ errors.firstName }}
+            </div>
+          </div>
 
-        <div class="form-group">
-          <label for="mobileNumber">Mobile Number *</label>
-          <input
-            id="mobileNumber"
-            v-model="formData.mobileNumber"
-            type="tel"
-            required
-            placeholder="Enter mobile number"
-          />
-          <div v-if="errors.mobileNumber" class="error">{{ errors.mobileNumber }}</div>
-        </div>
+          <div class="space-y-2">
+            <Label for="lastName">Last Name *</Label>
+            <Input
+              id="lastName"
+              v-model="formData.lastName"
+              type="text"
+              required
+              placeholder="Enter last name"
+            />
+            <div v-if="errors.lastName" class="text-sm text-destructive">
+              {{ errors.lastName }}
+            </div>
+          </div>
 
-        <div class="flex flex-gap mt-3">
-          <button type="submit" class="btn btn-primary" :disabled="loading">
-            {{ loading ? 'Saving...' : isEditMode ? 'Update Agent' : 'Create Agent' }}
-          </button>
-          <router-link to="/">
-            <button type="button" class="btn btn-secondary">Cancel</button>
-          </router-link>
-        </div>
-      </form>
-    </div>
+          <div class="space-y-2">
+            <Label for="email">Email *</Label>
+            <Input
+              id="email"
+              v-model="formData.email"
+              type="email"
+              required
+              placeholder="Enter email address"
+            />
+            <div v-if="errors.email" class="text-sm text-destructive">
+              {{ errors.email }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="mobileNumber">Mobile Number *</Label>
+            <Input
+              id="mobileNumber"
+              v-model="formData.mobileNumber"
+              type="tel"
+              required
+              placeholder="Enter mobile number"
+            />
+            <div v-if="errors.mobileNumber" class="text-sm text-destructive">
+              {{ errors.mobileNumber }}
+            </div>
+          </div>
+
+          <div class="flex gap-3 pt-4">
+            <Button type="submit" :disabled="loading">
+              <Save class="mr-2 h-4 w-4" v-if="!loading" />
+              <Loader2 class="mr-2 h-4 w-4 animate-spin" v-else />
+              {{ loading ? 'Saving...' : isEditMode ? 'Update Agent' : 'Create Agent' }}
+            </Button>
+            <router-link to="/">
+              <Button type="button" variant="outline">
+                <X class="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
+            </router-link>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { Save, X, Loader2 } from 'lucide-vue-next'
 import { useAgentStore } from '@/stores/agent.store'
 import type { CreatePropertyAgentDTO } from '@/types/agent'
 import { CreatePropertyAgentSchema } from '@/types/agent'
 import { agentService } from '@/api/agent.service'
 import { ZodError } from 'zod'
+import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue'
+import CardHeader from '@/components/ui/CardHeader.vue'
+import CardTitle from '@/components/ui/CardTitle.vue'
+import CardContent from '@/components/ui/CardContent.vue'
+import Input from '@/components/ui/Input.vue'
+import Label from '@/components/ui/Label.vue'
 
 const router = useRouter()
 const route = useRoute()
