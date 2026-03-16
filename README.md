@@ -6,35 +6,169 @@ A full-stack property management application built with Node.js/TypeScript backe
 
 ```
 property-agent-app/
-├── shared/              # Shared types and Zod schemas
-│   ├── schemas.ts       # PropertyAgent schemas and types
-│   └── package.json     # Zod dependency
-├── backend/            # Node.js + Express + TypeScript API
+├── docs/               # Documentation
+│   └── database-schema.md  # ERD and table definitions
+├── shared/             # Shared types and Zod schemas
 │   ├── src/
-│   │   ├── models/     # Class-based models using shared schemas
-│   │   ├── repositories/
-│   │   ├── controllers/
-│   │   ├── routes/
-│   │   └── config/     # Swagger/Scalar API docs
-│   └── package.json
-├── frontend/           # Vue 3 + TypeScript + Vite
+│   │   ├── schemas/    # Agent, Property, Tenant, Ticket, Address schemas
+│   │   ├── types/      # TypeScript type exports
+│   │   └── index.ts    # Main exports
+│   └── package.json    # Zod dependency
+├── backend/           # Node.js + Express + TypeScript API
 │   ├── src/
-│   │   ├── views/      # AgentList, AgentForm
-│   │   ├── stores/     # Pinia state management
-│   │   ├── api/        # Axios API client
-│   │   └── types/      # Re-exports from shared
+│   │   ├── models/    # Class-based models (6 entities)
+│   │   ├── repositories/ # Data access layer
+│   │   ├── controllers/  # Request handlers
+│   │   ├── routes/    # API routes
+│   │   └── config/    # Swagger/Scalar API docs
 │   └── package.json
-└── package.json        # Root scripts for monorepo
+├── frontend/          # Vue 3 + TypeScript + Vite
+│   ├── src/
+│   │   ├── views/     # List and Form components
+│   │   ├── stores/    # Pinia state management
+│   │   ├── api/       # Axios API clients
+│   │   ├── types/     # Re-exports from shared
+│   │   ├── router/    # Vue Router configuration
+│   │   └── composables/ # Reusable logic (form generator)
+│   └── package.json
+└── package.json       # Root scripts for monorepo
 ```
+
+## 🗄️ Database Schema
+
+The application manages a comprehensive property management system with agents, properties, tenants, tickets, and addresses.
+
+```mermaid
+erDiagram
+    PropertyAgent ||--o{ Property : "manages"
+    PropertyAgent ||--o{ Ticket : "assigned_to"
+    PropertyAgent ||--o| Address : "has"
+    
+    Property ||--o{ Ticket : "has"
+    Property ||--o{ PropertyTenant : "rented_to"
+    Property ||--o| Address : "located_at"
+    Property }o--|| Tenant : "current_tenant"
+    
+    Tenant ||--o{ PropertyTenant : "rents"
+    Tenant ||--o| Address : "lives_at"
+    
+    PropertyAgent {
+        uuid id PK
+        string firstName
+        string lastName
+        string email
+        string mobileNumber
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Property {
+        uuid id PK
+        string name
+        string description
+        enum propertyType
+        enum status
+        decimal purchasePrice
+        decimal currentValue
+        date purchaseDate
+        uuid addressId FK
+        uuid agentId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Address {
+        uuid id PK
+        string street
+        string city
+        string state
+        string zipCode
+        string country
+        enum addressableType
+        uuid addressableId
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Tenant {
+        uuid id PK
+        string firstName
+        string lastName
+        string email
+        string mobileNumber
+        date leaseStartDate
+        date leaseEndDate
+        enum status
+        uuid propertyId FK
+        uuid addressId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Ticket {
+        uuid id PK
+        string title
+        string description
+        enum type
+        enum priority
+        enum status
+        date dueDate
+        uuid propertyId FK
+        uuid assignedTo FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    PropertyTenant {
+        uuid id PK
+        uuid propertyId FK
+        uuid tenantId FK
+        date startDate
+        date endDate
+        boolean isActive
+        decimal rentAmount
+        decimal depositAmount
+        string notes
+        datetime createdAt
+        datetime updatedAt
+    }
+```
+
+**Key Entities:**
+- **PropertyAgent**: Manages properties and handles tickets
+- **Property**: Real estate with status, pricing, and agent assignment
+- **Tenant**: Individuals renting properties with lease information
+- **Ticket**: Tasks/reminders auto-assigned to property's agent
+- **Address**: Polymorphic addresses for properties, tenants, and agents
+- **PropertyTenant**: Junction table tracking rental relationships
+
+📄 [Full Database Schema Documentation](./docs/database-schema.md)
 
 ## ✨ Features
 
+### Core Functionality
+- **Property Management**: Track properties with types, status, pricing, and addresses
+- **Agent Management**: Manage property agents with contact information
+- **Tenant Management**: Handle tenant information and lease tracking
+- **Ticket System**: Tasks/reminders with auto-assignment to property agents
+- **Address System**: Polymorphic addresses for properties, tenants, and agents
+- **Rental Relationships**: Track property-tenant relationships over time
+
+### Technical Features
 - **Shared Types with Zod**: Single source of truth for types and validation
 - **Backend API**: RESTful CRUD endpoints with class-based models
-- **Frontend**: Vue 3 with Composition API, Pinia, and Vue Router
+- **Frontend UI**: Vue 3 with Composition API, Pinia, Radix UI components
 - **API Documentation**: Interactive docs at `/api-docs` (Scalar)
 - **Type Safety**: Full TypeScript coverage with runtime validation
-- **Modern Tooling**: ESLint 9, Prettier, pnpm, tsx
+- **Form Validation**: Client-side validation with Zod schemas
+- **Test Data Generator**: Quick form testing with random realistic data
+- **Modern Tooling**: ESLint 9, Prettier, pnpm, tsx, Tailwind CSS
+
+### User Experience
+- **Dropdown Selectors**: Property and agent selection with readable names
+- **Status Badges**: Visual indicators for property, tenant, and ticket status
+- **Auto-Assignment**: Tickets automatically assigned to property's agent
+- **Responsive Design**: Mobile-friendly interface with Tailwind CSS
 
 ## 🚀 Quick Start
 
@@ -107,6 +241,7 @@ pnpm run lint:fix          # Fix ESLint issues automatically
 - **Vue 3** 3.5.26 (Composition API)
 - \*\*� API Endpoints
 
+### Agents
 | Method | Endpoint        | Description      |
 | ------ | --------------- | ---------------- |
 | GET    | /api/agents     | Get all agents   |
@@ -114,6 +249,51 @@ pnpm run lint:fix          # Fix ESLint issues automatically
 | POST   | /api/agents     | Create new agent |
 | PUT    | /api/agents/:id | Update agent     |
 | DELETE | /api/agents/:id | Delete agent     |
+
+### Properties
+| Method | Endpoint            | Description           |
+| ------ | ------------------- | --------------------- |
+| GET    | /api/properties     | Get all properties    |
+| GET    | /api/properties/:id | Get property by ID    |
+| POST   | /api/properties     | Create new property   |
+| PUT    | /api/properties/:id | Update property       |
+| DELETE | /api/properties/:id | Delete property       |
+
+### Tenants
+| Method | Endpoint          | Description         |
+| ------ | ----------------- | ------------------- |
+| GET    | /api/tenants      | Get all tenants     |
+| GET    | /api/tenants/:id  | Get tenant by ID    |
+| POST   | /api/tenants      | Create new tenant   |
+| PUT    | /api/tenants/:id  | Update tenant       |
+| DELETE | /api/tenants/:id  | Delete tenant       |
+
+### Tickets
+| Method | Endpoint          | Description         |
+| ------ | ----------------- | ------------------- |
+| GET    | /api/tickets      | Get all tickets     |
+| GET    | /api/tickets/:id  | Get ticket by ID    |
+| POST   | /api/tickets      | Create new ticket   |
+| PUT    | /api/tickets/:id  | Update ticket       |
+| DELETE | /api/tickets/:id  | Delete ticket       |
+
+### Addresses
+| Method | Endpoint            | Description           |
+| ------ | ------------------- | --------------------- |
+| GET    | /api/addresses      | Get all addresses     |
+| GET    | /api/addresses/:id  | Get address by ID     |
+| POST   | /api/addresses      | Create new address    |
+| PUT    | /api/addresses/:id  | Update address        |
+| DELETE | /api/addresses/:id  | Delete address        |
+
+### Property-Tenant Relationships
+| Method | Endpoint                    | Description                   |
+| ------ | --------------------------- | ----------------------------- |
+| GET    | /api/property-tenants       | Get all relationships         |
+| GET    | /api/property-tenants/:id   | Get relationship by ID        |
+| POST   | /api/property-tenants       | Create new relationship       |
+| PUT    | /api/property-tenants/:id   | Update relationship           |
+| DELETE | /api/property-tenants/:id   | Delete relationship           |
 
 Interactive API documentation: http://localhost:3000/api-docs
 
@@ -127,6 +307,7 @@ Interactive API documentation: http://localhost:3000/api-docs
 
 ## 📖 Documentation
 
+- [Database Schema](./docs/database-schema.md) - ERD, tables, relationships
 - [Backend Documentation](./backend/README.md) - API, models, repositories
 - [Frontend Documentation](./frontend/README.md) - Components, stores, routing
 - [Shared Types Documentation](./shared/README.md) - Schemas, validation, usage

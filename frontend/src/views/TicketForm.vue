@@ -66,7 +66,7 @@ const successMessage = ref('')
 // Watch for property changes and auto-assign agent
 watch(
   () => formData.propertyId,
-  (newPropertyId) => {
+  newPropertyId => {
     if (newPropertyId && !isEditMode.value) {
       const property = properties.value.find(p => p.id === newPropertyId)
       if (property?.agentId) {

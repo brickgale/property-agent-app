@@ -38,7 +38,7 @@ export function useFormGenerator() {
   }
 
   const randomUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       const r = (Math.random() * 16) | 0
       const v = c === 'x' ? r : (r & 0x3) | 0x8
       return v.toString(16)
@@ -48,7 +48,16 @@ export function useFormGenerator() {
   // Generate random agent data
   const generateAgentData = () => {
     const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Lisa']
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis']
+    const lastNames = [
+      'Smith',
+      'Johnson',
+      'Williams',
+      'Brown',
+      'Jones',
+      'Garcia',
+      'Miller',
+      'Davis',
+    ]
 
     return {
       firstName: randomFromArray(firstNames),
@@ -89,7 +98,16 @@ export function useFormGenerator() {
   // Generate random tenant data
   const generateTenantData = () => {
     const firstNames = ['Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Avery', 'Quinn']
-    const lastNames = ['Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Wilson']
+    const lastNames = [
+      'Anderson',
+      'Thomas',
+      'Jackson',
+      'White',
+      'Harris',
+      'Martin',
+      'Thompson',
+      'Wilson',
+    ]
     const statuses = ['active', 'inactive', 'pending'] as const
 
     return {
