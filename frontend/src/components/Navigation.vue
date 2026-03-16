@@ -47,6 +47,13 @@ const navigateHome = () => {
         >
           Tenants
         </router-link>
+        <router-link
+          to="/tickets"
+          class="transition-colors hover:text-foreground/80 text-foreground/60"
+          active-class="text-foreground font-medium"
+        >
+          Tickets
+        </router-link>
       </nav>
     </div>
   </header>

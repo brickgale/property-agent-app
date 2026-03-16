@@ -121,23 +121,35 @@
           </div>
 
           <div class="space-y-2">
-            <Label for="agentId">Agent ID</Label>
-            <Input
+            <Label for="agentId">Agent</Label>
+            <select
               id="agentId"
               v-model="formData.agentId"
-              type="text"
-              placeholder="Enter agent UUID"
-            />
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option :value="undefined">Select an agent (optional)</option>
+              <option v-for="agent in agents" :key="agent.id" :value="agent.id">
+                {{ agent.firstName }} {{ agent.lastName }}
+              </option>
+            </select>
             <div v-if="errors.agentId" class="text-sm text-destructive">
               {{ errors.agentId }}
             </div>
           </div>
 
-          <div class="flex gap-3 pt-4">
+          <div class="flex flex-wrap gap-3 pt-4">
             <Button type="submit" :disabled="loading">
               <Save class="mr-2 h-4 w-4" v-if="!loading" />
               <Loader2 class="mr-2 h-4 w-4 animate-spin" v-else />
               {{ loading ? 'Saving...' : isEditMode ? 'Update Property' : 'Create Property' }}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              @click="() => Object.assign(formData, generatePropertyData())"
+            >
+              <Shuffle class="mr-2 h-4 w-4" />
+              Fill Random Data
             </Button>
             <router-link to="/properties">
               <Button type="button" variant="outline">
@@ -155,8 +167,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Save, X, Loader2 } from 'lucide-vue-next'
+import { Save, X, Loader2, Shuffle } from 'lucide-vue-next'
 import { usePropertyStore } from '@/stores/property.store'
+import { useAgentStore } from '@/stores/agent.store'
 import { CreatePropertySchema } from '@/types/property'
 import { propertyService } from '@/api/property.service'
 import { ZodError } from 'zod'
@@ -167,14 +180,18 @@ import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Input from '@/components/ui/Input.vue'
 import Label from '@/components/ui/Label.vue'
+import { useFormGenerator } from '@/composables/useFormGenerator'
 
 const router = useRouter()
 const route = useRoute()
 const propertyStore = usePropertyStore()
+const agentStore = useAgentStore()
+const { generatePropertyData } = useFormGenerator()
 
 const isEditMode = computed(() => !!route.params.id)
 const loading = computed(() => propertyStore.loading)
 const error = computed(() => propertyStore.error)
+const agents = computed(() => agentStore.agents)
 
 const formData = reactive({
   name: '',
@@ -203,6 +220,13 @@ const errors = reactive({
 const successMessage = ref('')
 
 onMounted(async () => {
+  // Load agents for dropdown
+  try {
+    await agentStore.fetchAgents()
+  } catch (err) {
+    console.error('Failed to fetch agents:', err)
+  }
+
   if (isEditMode.value) {
     try {
       const property = await propertyService.getPropertyById(route.params.id as string)

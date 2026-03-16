@@ -109,23 +109,35 @@
           </div>
 
           <div class="space-y-2">
-            <Label for="propertyId">Property ID</Label>
-            <Input
+            <Label for="propertyId">Property</Label>
+            <select
               id="propertyId"
               v-model="formData.propertyId"
-              type="text"
-              placeholder="Enter property UUID"
-            />
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option :value="undefined">Select a property (optional)</option>
+              <option v-for="property in properties" :key="property.id" :value="property.id">
+                {{ property.name }}
+              </option>
+            </select>
             <div v-if="errors.propertyId" class="text-sm text-destructive">
               {{ errors.propertyId }}
             </div>
           </div>
 
-          <div class="flex gap-3 pt-4">
+          <div class="flex flex-wrap gap-3 pt-4">
             <Button type="submit" :disabled="loading">
               <Save class="mr-2 h-4 w-4" v-if="!loading" />
               <Loader2 class="mr-2 h-4 w-4 animate-spin" v-else />
               {{ loading ? 'Saving...' : isEditMode ? 'Update Tenant' : 'Create Tenant' }}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              @click="() => Object.assign(formData, generateTenantData())"
+            >
+              <Shuffle class="mr-2 h-4 w-4" />
+              Fill Random Data
             </Button>
             <router-link to="/tenants">
               <Button type="button" variant="outline">
@@ -143,8 +155,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Save, X, Loader2 } from 'lucide-vue-next'
+import { Save, X, Loader2, Shuffle } from 'lucide-vue-next'
 import { useTenantStore } from '@/stores/tenant.store'
+import { usePropertyStore } from '@/stores/property.store'
 import { CreateTenantSchema } from '@/types/tenant'
 import { tenantService } from '@/api/tenant.service'
 import { ZodError } from 'zod'
@@ -155,14 +168,18 @@ import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Input from '@/components/ui/Input.vue'
 import Label from '@/components/ui/Label.vue'
+import { useFormGenerator } from '@/composables/useFormGenerator'
 
 const router = useRouter()
 const route = useRoute()
 const tenantStore = useTenantStore()
+const propertyStore = usePropertyStore()
+const { generateTenantData } = useFormGenerator()
 
 const isEditMode = computed(() => !!route.params.id)
 const loading = computed(() => tenantStore.loading)
 const error = computed(() => tenantStore.error)
+const properties = computed(() => propertyStore.properties)
 
 const formData = reactive({
   firstName: '',
@@ -191,6 +208,13 @@ const errors = reactive({
 const successMessage = ref('')
 
 onMounted(async () => {
+  // Load properties for dropdown
+  try {
+    await propertyStore.fetchProperties()
+  } catch (err) {
+    console.error('Failed to fetch properties:', err)
+  }
+
   if (isEditMode.value) {
     try {
       const tenant = await tenantService.getTenantById(route.params.id as string)

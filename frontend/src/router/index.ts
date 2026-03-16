@@ -5,6 +5,8 @@ import PropertyList from '@/views/PropertyList.vue'
 import PropertyForm from '@/views/PropertyForm.vue'
 import TenantList from '@/views/TenantList.vue'
 import TenantForm from '@/views/TenantForm.vue'
+import TicketList from '@/views/TicketList.vue'
+import TicketForm from '@/views/TicketForm.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -55,6 +57,22 @@ const router = createRouter({
       path: '/tenants/:id/edit',
       name: 'EditTenant',
       component: TenantForm,
+      props: true,
+    },
+    {
+      path: '/tickets',
+      name: 'TicketList',
+      component: TicketList,
+    },
+    {
+      path: '/tickets/new',
+      name: 'CreateTicket',
+      component: TicketForm,
+    },
+    {
+      path: '/tickets/:id/edit',
+      name: 'EditTicket',
+      component: TicketForm,
       props: true,
     },
   ],
