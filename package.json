@@ -6,7 +6,7 @@
   "scripts": {
     "install:backend": "cd backend && pnpm install",
     "install:frontend": "cd frontend && pnpm install",
-    "install:all": "pnpm run install:backend && pnpm run install:frontend",
+    "install:all": "pnpm install && pnpm run install:backend && pnpm run install:frontend",
     "dev:backend": "cd backend && pnpm run dev",
     "dev:frontend": "cd frontend && pnpm run dev",
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
@@ -19,7 +19,9 @@
     "lint:backend": "cd backend && pnpm run lint",
     "lint:frontend": "cd frontend && pnpm run lint",
     "lint": "pnpm run lint:backend && pnpm run lint:frontend",
-    "lint:fix": "pnpm run lint:backend -- --fix && pnpm run lint:frontend -- --fix"
+    "lint:fix:backend": "cd backend && pnpm run lint:fix",
+    "lint:fix:frontend": "cd frontend && pnpm run lint:fix",
+    "lint:fix": "pnpm run lint:fix:backend && pnpm run lint:fix:frontend"
   },
   "keywords": [
     "property-management",
