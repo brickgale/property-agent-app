@@ -1,39 +1,47 @@
 import { v4 as uuidv4 } from 'uuid'
 import {
-  PropertyAgent as IPropertyAgent,
-  CreatePropertyAgentDTO,
-  UpdatePropertyAgentDTO,
-} from '@shared/types'
-import {
-  PropertyAgentSchema,
-  CreatePropertyAgentSchema,
-  UpdatePropertyAgentSchema,
-} from '@shared/schemas'
+  Tenant as ITenant,
+  CreateTenantDTO,
+  UpdateTenantDTO,
+  TenantSchema,
+  CreateTenantSchema,
+  UpdateTenantSchema,
+} from '@shared'
 
 // Class-based model with methods, getters, and mutations
-export class PropertyAgent implements IPropertyAgent {
+export class Tenant implements ITenant {
   constructor(
     public id: string,
     public firstName: string,
     public lastName: string,
     public email: string,
     public mobileNumber: string,
+    public leaseStartDate: Date | undefined,
+    public leaseEndDate: Date | undefined,
+    public status: 'active' | 'inactive' | 'pending',
+    public propertyId: string | undefined,
+    public addressId: string | undefined,
     public createdAt: Date,
     public updatedAt: Date
   ) {}
 
   // Factory method with validation
-  static create(data: CreatePropertyAgentDTO): PropertyAgent {
+  static create(data: CreateTenantDTO): Tenant {
     // Validate using Zod
-    const validated = CreatePropertyAgentSchema.parse(data)
+    const validated = CreateTenantSchema.parse(data)
 
     const now = new Date()
-    return new PropertyAgent(
+    return new Tenant(
       uuidv4(),
       validated.firstName,
       validated.lastName,
       validated.email,
       validated.mobileNumber,
+      validated.leaseStartDate,
+      validated.leaseEndDate,
+      validated.status,
+      validated.propertyId,
+      validated.addressId,
       now,
       now
     )
@@ -44,10 +52,16 @@ export class PropertyAgent implements IPropertyAgent {
     return `${this.firstName} ${this.lastName}`
   }
 
+  get isLeaseActive(): boolean {
+    if (!this.leaseStartDate || !this.leaseEndDate) return false
+    const now = new Date()
+    return now >= this.leaseStartDate && now <= this.leaseEndDate
+  }
+
   // Update method with validation
-  update(data: UpdatePropertyAgentDTO): void {
+  update(data: UpdateTenantDTO): void {
     // Validate using Zod
-    const validated = UpdatePropertyAgentSchema.parse(data)
+    const validated = UpdateTenantSchema.parse(data)
 
     // Update only provided fields
     Object.assign(this, validated)
@@ -56,25 +70,35 @@ export class PropertyAgent implements IPropertyAgent {
 
   // Validate current instance
   validate(): void {
-    PropertyAgentSchema.parse({
+    TenantSchema.parse({
       id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
       mobileNumber: this.mobileNumber,
+      leaseStartDate: this.leaseStartDate,
+      leaseEndDate: this.leaseEndDate,
+      status: this.status,
+      propertyId: this.propertyId,
+      addressId: this.addressId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     })
   }
 
   // Serialization for JSON responses
-  toJSON(): IPropertyAgent {
+  toJSON(): ITenant {
     return {
       id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
       mobileNumber: this.mobileNumber,
+      leaseStartDate: this.leaseStartDate,
+      leaseEndDate: this.leaseEndDate,
+      status: this.status,
+      propertyId: this.propertyId,
+      addressId: this.addressId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     }
@@ -82,4 +106,4 @@ export class PropertyAgent implements IPropertyAgent {
 }
 
 // Re-export types for convenience
-export type { IPropertyAgent, CreatePropertyAgentDTO, UpdatePropertyAgentDTO }
+export type { ITenant, CreateTenantDTO, UpdateTenantDTO }

@@ -7,6 +7,11 @@
   "exports": {
     ".": "./src/index.ts",
     "./schemas": "./src/schemas/agent.schema.ts",
+    "./schemas/property": "./src/schemas/property.schema.ts",
+    "./schemas/address": "./src/schemas/address.schema.ts",
+    "./schemas/tenant": "./src/schemas/tenant.schema.ts",
+    "./schemas/ticket": "./src/schemas/ticket.schema.ts",
+    "./schemas/propertyTenant": "./src/schemas/propertyTenant.schema.ts",
     "./types": "./src/types/index.ts"
   },
   "scripts": {

@@ -2,6 +2,11 @@ import express, { Application } from 'express'
 import cors from 'cors'
 import { apiReference } from '@scalar/express-api-reference'
 import agentRoutes from '@/routes/agent.routes.js'
+import propertyRoutes from '@/routes/property.routes.js'
+import addressRoutes from '@/routes/address.routes.js'
+import tenantRoutes from '@/routes/tenant.routes.js'
+import ticketRoutes from '@/routes/ticket.routes.js'
+import propertyTenantRoutes from '@/routes/propertyTenant.routes.js'
 import { openApiSpec } from '@/config/swagger.js'
 
 const app: Application = express()
@@ -30,6 +35,11 @@ app.get('/api-docs.json', (req, res) => {
 
 // Routes
 app.use('/api', agentRoutes)
+app.use('/api', propertyRoutes)
+app.use('/api', addressRoutes)
+app.use('/api', tenantRoutes)
+app.use('/api', ticketRoutes)
+app.use('/api', propertyTenantRoutes)
 
 // Health check
 app.get('/health', (req, res) => {
